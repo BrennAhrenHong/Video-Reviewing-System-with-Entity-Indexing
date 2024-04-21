@@ -107,11 +107,13 @@ class Frame:
             crop = self.crops_list_path
             label = self.label_list
             label_line = self.label_list[counter]
-            crop_id = label_line[5]
+            label_split = label_line.split(' ')
+            crop_id = label_split[5]
 
-            new_crop = Crop(yolo_class=0, crop_path=crop[counter], crop_id=crop_id, label=label[counter],
-                            frame=self.frame)
+            new_crop = Crop(yolo_class=0, crop_path=crop[counter], crop_id=crop_id, label=label_split,
+                            frame=self.frame, frame_number=self.frame_number)
             crop_list.append(new_crop)
+            counter += 1
 
         return crop_list
 
@@ -119,11 +121,12 @@ class Frame:
 class Crop:
 
     #def __init__(self, yolo_class, crop_path, label, frame: Optional[Frame]):
-    def __init__(self, yolo_class, crop_path, crop_id, label, frame):
+    def __init__(self, yolo_class, crop_path, crop_id, label, frame, frame_number):
         self._yolo_class = yolo_class
         self._crop_path = crop_path
         self._label = label
         self._frame = frame
+        self._frame_number = frame_number
 
         self._crop_id = crop_id
         self._frame_coordinates = self._set_frame_coordinates()
@@ -140,6 +143,10 @@ class Crop:
     @property
     def frame(self):
         return self._frame
+
+    @property
+    def frame_number(self):
+        return self._frame_number
 
     @property
     def crop_id(self):
