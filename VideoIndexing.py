@@ -38,6 +38,10 @@ class VideoDetails:
     def is_processed(self):
         return self._is_processed
 
+    @is_processed.setter
+    def is_processed(self, is_processed):
+        self._is_processed = is_processed
+
     @person_list.setter
     def person_list(self, person_list):
         self._person_list = person_list
@@ -59,6 +63,7 @@ class VideoDetails:
             pass
 
         indexed_persons_list = []
+        processed_frames_list = []
         frame_folders = os.path.join(self.inferred_folder, self.video_title)
         for folder in os.listdir(frame_folders):
             folder_path = os.path.join(frame_folders, folder)
@@ -66,7 +71,7 @@ class VideoDetails:
                 continue
 
             frame = Frame(folder_path)
-
+            processed_frames_list.append(frame)
             # Create crops
             for crop in frame.crop_list:
 
@@ -86,6 +91,8 @@ class VideoDetails:
                         new_person.crop_list.append(crop)  # what happened???
                         indexed_persons_list.append(new_person)
 
+        self.is_processed = True
+        self.processed_frames_list = processed_frames_list
         self.person_list = indexed_persons_list
 
     def build_indexed_persons(self):
@@ -98,14 +105,14 @@ class VideoDetails:
         for person in self.person_list:
             person_folder_name = "person_"
             new_person_folder = os.path.join(video_build_directory, person_folder_name + person.person_id)
-            if (os.path.exists(new_person_folder) == False):
+            if not os.path.exists(new_person_folder):
                 os.mkdir(new_person_folder)
+            else:
+                continue
             for crop in person.crop_list:
                 shutil.copyfile(crop.crop_path, new_person_folder + "/" + crop.frame_number + ".jpg")
 
-        #frame_folders = os.path.join(self.output_folder, self.video_title)
-        #for folder in os.listdir(frame_folders):
-        pass
+
 
 
 if __name__ == "__main__":

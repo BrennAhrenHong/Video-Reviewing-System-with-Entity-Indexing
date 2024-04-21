@@ -2,6 +2,7 @@ import os
 import re
 from typing import Optional
 
+
 class Frame:
 
     # Properties
@@ -12,12 +13,13 @@ class Frame:
         extracted_frame_number = self.extract_frame_number(self._frame_folder)
         self._frame_number = extracted_frame_number[0]
 
-        self._frame = self.find_frame()
+        self._frame_image = self.find_frame()
         self._label_path = self.find_label_path()
-        self._crops_list_path = self.find_crops_list_path() #crops path
+        self._crops_list_path = self.find_crops_list_path()  #crops path
         self._label_list = self.read_label()
 
         self._crop_list = self.create_crop_list()
+
     @property
     def frame_folder_path(self):
         return self._frame_folder_path
@@ -31,8 +33,8 @@ class Frame:
         return self._frame_number
 
     @property
-    def frame(self):
-        return self._frame
+    def frame_image(self):
+        return self._frame_image
 
     @property
     def label_path(self):
@@ -53,6 +55,7 @@ class Frame:
     @crop_list.setter
     def crop_list(self, crop_list):
         self._crop_list = crop_list
+
     def extract_frame_number(self, folder_name):
         extract_frame_number = re.findall(r"\d+\.?\d*", self._frame_folder)
         if extract_frame_number == []:
@@ -111,7 +114,7 @@ class Frame:
             crop_id = label_split[5]
 
             new_crop = Crop(yolo_class=0, crop_path=crop[counter], crop_id=crop_id, label=label_split,
-                            frame=self.frame, frame_number=self.frame_number)
+                            frame_image=self.frame_image, frame_number=self.frame_number)
             crop_list.append(new_crop)
             counter += 1
 
@@ -121,16 +124,24 @@ class Frame:
 class Crop:
 
     #def __init__(self, yolo_class, crop_path, label, frame: Optional[Frame]):
-    def __init__(self, yolo_class, crop_path, crop_id, label, frame, frame_number):
+    def __init__(self, yolo_class, crop_path, crop_id, label, frame_image, frame_number):
         self._yolo_class = yolo_class
         self._crop_path = crop_path
         self._label = label
-        self._frame = frame
+        self._frame_image = frame_image
         self._frame_number = frame_number
-
         self._crop_id = crop_id
+
         self._frame_coordinates = self._set_frame_coordinates()
         self._hash_value = None
+
+    def _set_frame_coordinates(self):
+        coordinates = []
+        coordinates.append(self._label[1])
+        coordinates.append(self._label[2])
+        coordinates.append(self._label[3])
+        coordinates.append(self._label[4])
+        return coordinates
 
     @property
     def crop_path(self):
@@ -141,8 +152,8 @@ class Crop:
         return self._label
 
     @property
-    def frame(self):
-        return self._frame
+    def frame_image(self):
+        return self._frame_image
 
     @property
     def frame_number(self):
@@ -161,20 +172,15 @@ class Crop:
         self._hash_value = new_hash_value
 
 
-    def _set_frame_coordinates(self):
-        coordinates = []
-        coordinates.append(self._label[1])
-        coordinates.append(self._label[2])
-        coordinates.append(self._label[3])
-        coordinates.append(self._label[4])
-        return coordinates
-
 class Person:
 
     def __init__(self, person_id):
         self._person_id = person_id
         self._crop_list = []
-        self._is_processed = False
+        self._has_montage = False
+
+    def add_crop(self, crop):
+        self._crop_list.append(crop)
 
     @property
     def person_id(self):
@@ -184,18 +190,14 @@ class Person:
     def crop_list(self):
         return self._crop_list
 
-    def add_crop(self, crop):
-        self._crop_list.append(crop)
-
     @crop_list.setter
     def crop_list(self, crop_list):
         self._crop_list = crop_list
 
-
     @property
-    def is_processed(self):
-        return self._is_processed
+    def has_montage(self):
+        return self._has_montage
 
-    @is_processed.setter
-    def is_processed(self, is_processed):
-        self._is_processed = is_processed
+    @has_montage.setter
+    def has_montage(self, has_montage):
+        self._has_montage = has_montage
