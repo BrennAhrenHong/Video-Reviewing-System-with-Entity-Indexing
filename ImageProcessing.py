@@ -8,21 +8,24 @@ from typing import Optional
 class Frame:
 
     # Properties
-    def __init__(self, frame_number: Optional[int], frame_folder_path):
+    def __init__(self, frame_number: Optional[int], frame_folder_path, frame_folder=None, frame_image = None, label_file_path=None):
         self._frame_number = frame_number
         self._frame_folder_path = frame_folder_path
-        self._frame_folder = os.path.basename(self._frame_folder_path)
 
-        #extracted_frame_number = self.extract_frame_number(self._frame_folder)
+        if frame_folder is None:
+            self._frame_folder = os.path.basename(self.frame_folder_path)
+        else:
+            self._frame_folder = frame_folder
 
-        #self._frame_number = extracted_frame_number[0]
+        if frame_image is None:
+            self._frame_image = self.find_frame()
+        else:
+            self._frame_image = frame_image
 
-        self._frame_image = self.find_frame()
-        self._label_file_path = self.find_label_file_path()
-        #self._crops_list_path = self.find_crops_list_path()  #crops path
-        #self._label_list = self.read_label()
-
-        #self._crop_list = self.create_crop_list()
+        if label_file_path is None:
+            self._label_file_path = self.find_label_file_path()
+        else:
+            self._label_file_path = label_file_path
 
     @property
     def frame_folder_path(self):
@@ -31,6 +34,10 @@ class Frame:
     @property
     def frame_folder(self):
         return self._frame_folder
+
+    @frame_folder.setter
+    def frame_folder(self, frame_folder):
+        self.frame_folder = frame_folder
 
     @property
     def frame_number(self):
@@ -43,26 +50,6 @@ class Frame:
     @property
     def label_file_path(self):
         return self._label_file_path
-
-    # @property
-    # def label_path(self):
-    #     return self._label_file_path
-    #
-    # @property
-    # def crops_list_path(self):
-    #     return self._crops_list_path
-
-    # @property
-    # def label_list(self):
-    #     return self._label_list
-
-    # @property
-    # def crop_list(self):
-    #     return self._crop_list
-
-    # @crop_list.setter
-    # def crop_list(self, crop_list):
-    #     self._crop_list = crop_list
 
     def extract_frame_number(self, folder_name):
         extract_frame_number = re.findall(r"\d+\.?\d*", self._frame_folder)
@@ -147,16 +134,6 @@ class Frame:
 
 
         return new_indexed_person_list
-
-    # for person in indexed_person_list:
-    #     if new_person.person_id == person.person_id:
-    #         counter += 1
-    #         found_match = True
-    #         continue
-    # if found_match:
-    #     new_indexed_person_list.append(new_person)
-    #     counter += 1
-    #     found_match = False
 
     def create_crop_list(self, crop_number):
         label_list = self.read_label()
@@ -245,25 +222,18 @@ class Crop:
 
 class Person:
 
-    def __init__(self, person_id: Optional[int]):
+    def __init__(self, person_id: Optional[int], has_montage=None):
         self._person_id = person_id
-        #self._crop_list = []
-        self._has_montage = False
 
-    # def add_crop(self, crop):
-    #     self._crop_list.append(crop)
+        if has_montage is None:
+            self._has_montage = False
+        else:
+            self._has_montage = has_montage
+
 
     @property
     def person_id(self):
         return self._person_id
-
-    # @property
-    # def crop_list(self):
-    #     return self._crop_list
-
-    # @crop_list.setter
-    # def crop_list(self, crop_list):
-    #     self._crop_list = crop_list
 
     @property
     def has_montage(self):
