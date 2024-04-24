@@ -1,21 +1,20 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import os
+import sqlite3
 import sys
+
 import cv2
 import shutil
 
-from PySide6.QtGui import QPixmap
-from SummaryLogic_GUI import SummaryLogic
+from typing import Optional
+
+from PySide6.QtCore import QStringListModel
+from PySide6.QtGui import QPixmap, QStandardItemModel, QStandardItem
 from VideoFrameLogic import VideoFrame
 from VideoIndexing import VideoDetails
 from pymediainfo import MediaInfo
 
 from MainWindow import Ui_MainWindow
 from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
     QGroupBox, QHBoxLayout, QLabel, QListView,
     QMainWindow, QMenuBar, QProgressBar, QPushButton,
@@ -32,14 +31,15 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         # Variables
         self.input_folder_path = r"./input/"
         self.output_folder_path = r"./output/"
-        self.current_selected_video = None
         self.temp_folder_path = r"./temp/"
+
+        self.current_selected_video = None
         self._preview_frame_image_list = None
         self._preview_frame_image_counter = None
 
         # Setup
         # We're going to add an if condition where if the video is "processed" the details should not be unavailable
-        QTabWidget.setTabEnabled(self.ui.tabWidget_content, 1, False) # Disable "Details" tab
+        #QTabWidget.setTabEnabled(self.ui.tabWidget_content, 1, False) # Disable "Details" tab
 
         # Create input/output folder if it doesn't exist
         if not os.path.exists(self.input_folder_path):
@@ -58,10 +58,9 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
 
         # Create a preset selection list
         #self.ui.comboBox_presetSelection_box.addItem()
+
         # Video Selection
         self.load_combobox_videoSelection()
-
-
 
         def load_combobox_presets(self):
             pass
@@ -74,73 +73,46 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         self.ui.pushButton_videoPreview_prev.pressed.connect(self.video_preview_prev)
         self.ui.comboBox_videoSelection_box.currentIndexChanged.connect(self._on_combobox_video_selection_changed)
 
-
-
         self.show()
     # Functionalities
     def process(self):
         # begin YOLO so insert startyolo here
         self.ui.tabWidget_content.setTabEnabled(1,True)
-        self.load_detected_persons_list()
+        self.load_detected_persons_listview()
 
-    def load_detected_persons_list(self):
+    def load_detected_persons_listview(self):
         model = QStandardItemModel()
-        model.setHorizontalHeaderLabels(["Name", "Id", "Crops #"])
 
-        name_item = QStandardItem()
-        name_item.setText("person A")
-        id_item = QStandardItem()
-        id_item.setText("1")
-        crops_item = QStandardItem()
-        crops_item.setText("100")
-        model.appendColumn([name_item])
-        model.appendColumn([id_item])
-        model.appendColumn([crops_item])
-        self.ui.listView_indexedPeople.setModel(model)
+        #data = ListViewPerson(id=0,crops=10)
+        data = ["item1", "item2", "item3"]
+        stringlistmodel = QStringListModel(data)
+
+        #Listview set model
+        self.ui.listView_indexedPeople.setModel(stringlistmodel)
+
+        #name_item = QStandardItem()
+        #name_item.setText("person A")
+        #id_item = QStandardItem()
+        #id_item.setText("1")
+        #crops_item = QStandardItem()
+        #crops_item.setText("100")
+        #model.appendColumn([name_item])
+        #model.appendColumn([id_item])
+        #model.appendColumn([crops_item])
+
 
         #instance = DetailsLogic()
         #instance.load_listview(self.ui.listView_indexedPeople)
         #self.ui.listView_indexedPeople.setModel()
         pass
 
+
+
     def get_indexed_people(self):
         project_output_path = r".\output\Indexed\Thesis_FullOfficeCut_T300_5mins"
 
 
         pass
-
-    def video_preview_next(self):
-        i = self._preview_frame_image_counter
-        if i + 1 >= len(self._preview_frame_image_list):
-            image = self._preview_frame_image_list[0]
-            self._preview_frame_image_counter = 0
-            self.ui.label_videoPreview_image.setPixmap(image)
-        else:
-            i += 1
-            self._preview_frame_image_counter = i
-            image = self._preview_frame_image_list[i]
-            self.ui.label_videoPreview_image.setPixmap(image)
-
-    def video_preview_prev(self):
-        i = self._preview_frame_image_counter
-        if i - 1 <= -1:
-            i = len(self._preview_frame_image_list) - 1
-            image = self._preview_frame_image_list[i]
-            self._preview_frame_image_counter = i
-            self.ui.label_videoPreview_image.setPixmap(image)
-        else:
-            i -= 1
-            self._preview_frame_image_counter = i
-            image = self._preview_frame_image_list[i]
-            self.ui.label_videoPreview_image.setPixmap(image)
-
-    def load_combobox_videoSelection(self):
-        for video in os.listdir(self.input_folder_path):
-            try:
-                if video.endswith(".mp4"):
-                    self.ui.comboBox_videoSelection_box.addItem(str(video))
-            except Exception as e:
-                print(f"Error adding video: {e}")
 
     def _on_combobox_video_selection_changed(self):
         self.ui.pushButton_videoPreview_prev.setEnabled(False)
@@ -156,7 +128,7 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         self.ui.progressBar_status.setValue(50)
         new_video_frame.extract_and_save_frames(self.ui.progressBar_status, self.selected_video_filepath, self.temp_folder_path, preview_frames)
         self.set_preview_frame_images_list()
-        self.set_preview_frame_image()
+        #self.set_preview_frame_image()
 
         self.ui.pushButton_videoPreview_prev.setEnabled(True)
         self.ui.pushButton_videoPreview_next.setEnabled(True)
@@ -174,10 +146,6 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         self.ui.progressBar_status.hide()
 
 
-    def set_preview_frame_image(self):
-
-        pass
-
     def set_preview_frame_images_list(self):
         preview_image_path_list = []
         for file in os.listdir(self.temp_folder_path):
@@ -186,14 +154,16 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
                 pixmap = QPixmap(image_path)
                 preview_image_path_list.append(pixmap)
 
+        for img in preview_image_path_list:
+            print(img)
+
         self._preview_frame_image_list = preview_image_path_list
 
     def get_video_preview_frames(self, frames):
+        frame_list = []
         if frames == None:
-            frame_list = []
             return frame_list
 
-        frame_list = []
         if frames < 10:
             frame_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         else:
@@ -208,12 +178,32 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
 
         return frame_list
 
+    # Get summary details
     def get_summary_details(self):
+        def check_video_if_processed(selected_video_title : Optional[str]):
+            try:
+                conn = sqlite3.connect('main.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT video_title, is_processed FROM VideoDetails as vd WHERE vd.video_title = '{selected_video_title}';")
+                #cursor.execute(f"SELECT video_title FROM VideoDetails;")
+                entry = cursor.fetchone()
+                conn.close()
+
+                video_title = entry[0]
+                is_processed = entry[1]
+                video_details = VideoDetails(video_title=video_title, is_processed=is_processed)
+
+                return video_details
+
+            except sqlite3.Error as e:
+                print(f"Error connecting to database:{e}")
+            except Exception as e:
+                print(f"An error occurred: {e}")
+
         self.selected_video_filepath = os.path.join(self.input_folder_path, self.ui.comboBox_videoSelection_box.currentText())
         media_info = MediaInfo.parse(self.selected_video_filepath)
         track_info_list = []
 
-        media = media_info.tracks
         video_info = None
 
         # Get the video track by cycling through the video file data
@@ -241,7 +231,9 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         frames = self.get_frames(self.selected_video_filepath)
 
         # check if video is processed
-        is_processed = self.check_if_video_is_processed()
+        filename = os.path.basename(self.selected_video_filepath)
+        video_title, extension = filename.split('.')
+        is_processed = check_video_if_processed(str(video_title))
         if (is_processed):
             processed = "Yes"
             self.ui.tabWidget_content.setTabEnabled(1,True)
@@ -280,13 +272,55 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
             print(f"Error extracting number of frames using OpenCV: {e}")
             return None
 
-    def check_if_video_is_processed(self):
-        output_folder_path = r"./output/"
-        selected_video, extension = str.split(self.ui.comboBox_videoSelection_box.currentText(),sep=".")
-        for folder in os.listdir(output_folder_path):
-            if selected_video == folder:
-                return True
-        return False
+ # Controls for preview image
+    def video_preview_next(self):
+        i = self._preview_frame_image_counter
+        if i + 1 >= len(self._preview_frame_image_list):
+            image = self._preview_frame_image_list[0]
+            self._preview_frame_image_counter = 0
+            self.ui.label_videoPreview_image.setPixmap(image)
+        else:
+            i += 1
+            self._preview_frame_image_counter = i
+            image = self._preview_frame_image_list[i]
+            self.ui.label_videoPreview_image.setPixmap(image)
+
+    def video_preview_prev(self):
+        i = self._preview_frame_image_counter
+        if i - 1 <= -1:
+            i = len(self._preview_frame_image_list) - 1
+            image = self._preview_frame_image_list[i]
+            self._preview_frame_image_counter = i
+            self.ui.label_videoPreview_image.setPixmap(image)
+        else:
+            i -= 1
+            self._preview_frame_image_counter = i
+            image = self._preview_frame_image_list[i]
+            self.ui.label_videoPreview_image.setPixmap(image)
+
+
+ # Load combobox
+    def load_combobox_videoSelection(self):
+        def check_for_processed_videos(video_db_list : Optional[list[VideoDetails]]):
+            processed_video_list = []
+            for video in os.listdir(self.input_folder_path):
+                video_title, extension = video.split('.')
+                for video_in_db in video_db_list:
+                    if video_title == video_in_db.video_title:
+                        processed_video_list.append(video_in_db)
+                        break
+            return processed_video_list
+
+        #video_db_list = get_videodetails_sql()
+        #processed_video_list = check_for_processed_videos(video_db_list)
+
+        for video in os.listdir(self.input_folder_path):
+            try:
+                if video.endswith(".mp4"):
+                    self.ui.comboBox_videoSelection_box.addItem(str(video))
+            except Exception as e:
+                print(f"Error adding video: {e}")
+
 
     def printHelloWorld(self):
         print("Hello World")
@@ -307,6 +341,11 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         print("video_selection_combobox_count:", self.ui.comboBox_videoSelection_box.count())
         print("video_presetSelection_combobox_count:", self.ui.comboBox_presetSelection_box.count())
 
+
+class ListViewPerson:
+    def __init__(self, id, crops):
+        self.id = id
+        self.crops = crops
 
 # Press the green button in the gutter to run the script.
 if __name__ == "__main__":

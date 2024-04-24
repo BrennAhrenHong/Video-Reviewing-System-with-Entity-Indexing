@@ -131,6 +131,7 @@ class Ui_MainWindow(object):
         self.tabWidget_content = QTabWidget(self.centralwidget)
         self.tabWidget_content.setObjectName(u"tabWidget_content")
         self.tabWidget_content.setMaximumSize(QSize(16777215, 500))
+        self.tabWidget_content.setTabEnabled(1,False) #Disable Details Tab at startup
         font1 = QFont()
         font1.setBold(False)
         self.tabWidget_content.setFont(font1)
@@ -383,7 +384,7 @@ class Ui_MainWindow(object):
         self.listView_indexedPeople = QListView(self.tab_details)
         self.listView_indexedPeople.setObjectName(u"listView_indexedPeople")
         self.listView_indexedPeople.setFrameShape(QFrame.Box)
-        self.listView_indexedPeople.setViewMode()
+        #self.listView_indexedPeople.setViewMode()
 
         self.verticalLayout_indexedList.addWidget(self.listView_indexedPeople)
 
