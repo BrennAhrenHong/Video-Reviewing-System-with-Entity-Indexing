@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import sys
 
 ################################################################################
-## Form generated from reading UI file 'MainWindow_SummaryPage_7HrYrhs.ui'
+## Form generated from reading UI file 'MainWindow_SummaryPage_6tfWDlu.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.0
+## Created by: Qt User Interface Compiler version 6.4.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,18 +17,17 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
-    QGroupBox, QHBoxLayout, QHeaderView, QLabel,
-    QLayout, QMainWindow, QProgressBar, QPushButton,
+    QGroupBox, QHBoxLayout, QLabel, QListView,
+    QMainWindow, QMenuBar, QProgressBar, QPushButton,
     QRadioButton, QSizePolicy, QSpacerItem, QStatusBar,
-    QTabWidget, QTableView, QToolBar, QVBoxLayout,
-    QWidget)
+    QTabWidget, QToolBar, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1024, 679)
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        MainWindow.resize(1024, 683)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -44,7 +44,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_videoSelection.setObjectName(u"horizontalLayout_videoSelection")
         self.label_videoSelection_description = QLabel(self.centralwidget)
         self.label_videoSelection_description.setObjectName(u"label_videoSelection_description")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.label_videoSelection_description.sizePolicy().hasHeightForWidth())
@@ -71,7 +71,7 @@ class Ui_MainWindow(object):
 
         self.comboBox_videoSelection_box = QComboBox(self.centralwidget)
         self.comboBox_videoSelection_box.setObjectName(u"comboBox_videoSelection_box")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.comboBox_videoSelection_box.sizePolicy().hasHeightForWidth())
@@ -94,7 +94,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_videoSelection.addWidget(self.pushButton_videoSelection_openFolder)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_videoSelection.addItem(self.horizontalSpacer)
 
@@ -121,7 +121,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.comboBox_presetSelection_box)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
@@ -156,7 +156,7 @@ class Ui_MainWindow(object):
 
         self.label_summary_format_content = QLabel(self.tab_summary)
         self.label_summary_format_content.setObjectName(u"label_summary_format_content")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.label_summary_format_content.sizePolicy().hasHeightForWidth())
@@ -167,7 +167,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_summary.addLayout(self.horizontalLayout_videoFileType)
 
-        self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.verticalLayout_summary.addItem(self.verticalSpacer_4)
 
@@ -192,7 +192,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_summary.addLayout(self.horizontalLayout_resolutionSize)
 
-        self.verticalSpacer_5 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_5 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.verticalLayout_summary.addItem(self.verticalSpacer_5)
 
@@ -217,7 +217,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_summary.addLayout(self.horizontalLayout_duration)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.verticalLayout_summary.addItem(self.verticalSpacer_3)
 
@@ -242,7 +242,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_summary.addLayout(self.horizontalLayout_frameRate)
 
-        self.verticalSpacer_6 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_6 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.verticalLayout_summary.addItem(self.verticalSpacer_6)
 
@@ -267,7 +267,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_summary.addLayout(self.horizontalLayout_summary_frames)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_2 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.verticalLayout_summary.addItem(self.verticalSpacer_2)
 
@@ -284,7 +284,7 @@ class Ui_MainWindow(object):
 
         self.label_summary_processed_content = QLabel(self.tab_summary)
         self.label_summary_processed_content.setObjectName(u"label_summary_processed_content")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         sizePolicy5.setHorizontalStretch(0)
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.label_summary_processed_content.sizePolicy().hasHeightForWidth())
@@ -295,7 +295,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_summary.addLayout(self.horizontalLayout_6)
 
-        self.verticalSpacer = QSpacerItem(20, 300, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer = QSpacerItem(20, 300, QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.verticalLayout_summary.addItem(self.verticalSpacer)
 
@@ -313,7 +313,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_tab_summary.addLayout(self.verticalLayout_summary)
 
-        self.horizontalSpacer_3 = QSpacerItem(50, 5, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(50, 5, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
         self.horizontalLayout_tab_summary.addItem(self.horizontalSpacer_3)
 
@@ -333,11 +333,11 @@ class Ui_MainWindow(object):
         self.label_videoPreview_image.setSizePolicy(sizePolicy3)
         self.label_videoPreview_image.setMinimumSize(QSize(640, 360))
         self.label_videoPreview_image.setMaximumSize(QSize(16777215, 16777215))
-        self.label_videoPreview_image.setFrameShape(QFrame.Shape.Box)
-        self.label_videoPreview_image.setFrameShadow(QFrame.Shadow.Plain)
+        self.label_videoPreview_image.setFrameShape(QFrame.Box)
+        self.label_videoPreview_image.setFrameShadow(QFrame.Plain)
         self.label_videoPreview_image.setLineWidth(1)
         self.label_videoPreview_image.setScaledContents(True)
-        self.label_videoPreview_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_videoPreview_image.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_videoPreview.addWidget(self.label_videoPreview_image)
 
@@ -381,16 +381,16 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_indexedList.addWidget(self.label_indexedPeople_description)
 
-        self.tableView_indexedPeople = QTableView(self.tab_details)
-        self.tableView_indexedPeople.setObjectName(u"tableView_indexedPeople")
-        self.tableView_indexedPeople.setFrameShape(QFrame.Shape.Box)
+        self.listView_indexedPeople = QListView(self.tab_details)
+        self.listView_indexedPeople.setObjectName(u"listView_indexedPeople")
+        self.listView_indexedPeople.setFrameShape(QFrame.Box)
+        #self.listView_indexedPeople.setViewMode()
 
-        self.verticalLayout_indexedList.addWidget(self.tableView_indexedPeople)
-
+        self.verticalLayout_indexedList.addWidget(self.listView_indexedPeople)
 
         self.horizontalLayout_detailsTab.addLayout(self.verticalLayout_indexedList)
 
-        self.horizontalSpacer_4 = QSpacerItem(15, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(15, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
         self.horizontalLayout_detailsTab.addItem(self.horizontalSpacer_4)
 
@@ -410,11 +410,11 @@ class Ui_MainWindow(object):
         self.label_framePreview_image.setSizePolicy(sizePolicy3)
         self.label_framePreview_image.setMinimumSize(QSize(320, 180))
         self.label_framePreview_image.setMaximumSize(QSize(16777215, 16777215))
-        self.label_framePreview_image.setFrameShape(QFrame.Shape.Box)
-        self.label_framePreview_image.setFrameShadow(QFrame.Shadow.Plain)
+        self.label_framePreview_image.setFrameShape(QFrame.Box)
+        self.label_framePreview_image.setFrameShadow(QFrame.Plain)
         self.label_framePreview_image.setLineWidth(1)
         self.label_framePreview_image.setScaledContents(True)
-        self.label_framePreview_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_framePreview_image.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_framePreview.addWidget(self.label_framePreview_image)
 
@@ -437,7 +437,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_radioSelection.addWidget(self.radioButton_montagePanel_selected)
 
-        self.verticalSpacer_7 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_7 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
 
         self.verticalLayout_radioSelection.addItem(self.verticalSpacer_7)
 
@@ -483,7 +483,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_detailsTab.addLayout(self.verticalLayout_framePreview)
 
-        self.horizontalSpacer_5 = QSpacerItem(15, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_5 = QSpacerItem(15, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
         self.horizontalLayout_detailsTab.addItem(self.horizontalSpacer_5)
 
@@ -500,7 +500,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_11.addWidget(self.label_personCropPreviewDescription)
 
-        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_11.addItem(self.horizontalSpacer_6)
 
@@ -515,11 +515,11 @@ class Ui_MainWindow(object):
         self.label_personCropPreviewImage.setSizePolicy(sizePolicy3)
         self.label_personCropPreviewImage.setMinimumSize(QSize(180, 320))
         self.label_personCropPreviewImage.setMaximumSize(QSize(16777215, 16777215))
-        self.label_personCropPreviewImage.setFrameShape(QFrame.Shape.Box)
-        self.label_personCropPreviewImage.setFrameShadow(QFrame.Shadow.Plain)
+        self.label_personCropPreviewImage.setFrameShape(QFrame.Box)
+        self.label_personCropPreviewImage.setFrameShadow(QFrame.Plain)
         self.label_personCropPreviewImage.setLineWidth(1)
         self.label_personCropPreviewImage.setScaledContents(True)
-        self.label_personCropPreviewImage.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_personCropPreviewImage.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_8.addWidget(self.label_personCropPreviewImage)
 
@@ -528,7 +528,7 @@ class Ui_MainWindow(object):
 
         self.label_cropCounter = QLabel(self.tab_details)
         self.label_cropCounter.setObjectName(u"label_cropCounter")
-        self.label_cropCounter.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_cropCounter.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_personCropPreview.addWidget(self.label_cropCounter)
 
@@ -552,7 +552,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_personCropPreview.addLayout(self.horizontalLayout_7)
 
-        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_personCropPreview.addItem(self.verticalSpacer_8)
 
@@ -569,22 +569,22 @@ class Ui_MainWindow(object):
         self.verticalLayout_statusBar = QVBoxLayout()
         self.verticalLayout_statusBar.setSpacing(0)
         self.verticalLayout_statusBar.setObjectName(u"verticalLayout_statusBar")
-        self.verticalLayout_statusBar.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
         self.label_status = QLabel(self.centralwidget)
         self.label_status.setObjectName(u"label_status")
-        self.label_status.setEnabled(True)
         sizePolicy2.setHeightForWidth(self.label_status.sizePolicy().hasHeightForWidth())
         self.label_status.setSizePolicy(sizePolicy2)
-        self.label_status.setMinimumSize(QSize(90, 25))
-        self.label_status.setMaximumSize(QSize(90, 25))
-        self.label_status.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.label_status.setFixedSize(QSize(90, 25))
+        #self.label_status.setMinimumSize(QSize(90, 25))
+        #self.label_status.setMaximumSize(QSize(90, 25))
+        self.label_status.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.label_status.hide()
 
         self.verticalLayout_statusBar.addWidget(self.label_status)
 
+        #progressbar
         self.progressBar_status = QProgressBar(self.centralwidget)
         self.progressBar_status.setObjectName(u"progressBar_status")
-        self.progressBar_status.setEnabled(True)
-        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+        sizePolicy6 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
         sizePolicy6.setHorizontalStretch(0)
         sizePolicy6.setVerticalStretch(0)
         sizePolicy6.setHeightForWidth(self.progressBar_status.sizePolicy().hasHeightForWidth())
@@ -602,12 +602,16 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.verticalLayout_statusBar)
 
         MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QMenuBar(MainWindow)
+        self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 1024, 25))
+        MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.toolBar = QToolBar(MainWindow)
         self.toolBar.setObjectName(u"toolBar")
-        MainWindow.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
+        MainWindow.addToolBar(Qt.TopToolBarArea, self.toolBar)
 
         self.retranslateUi(MainWindow)
 
@@ -623,12 +627,6 @@ class Ui_MainWindow(object):
         self.pushButton_videoSelection_add.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.pushButton_videoSelection_openFolder.setText(QCoreApplication.translate("MainWindow", u"Open Input Folder", None))
         self.label_presetSelection_description.setText(QCoreApplication.translate("MainWindow", u"Preset:", None))
-#if QT_CONFIG(tooltip)
-        self.tabWidget_content.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.tab_summary.setToolTip("")
-#endif // QT_CONFIG(tooltip)
         self.label_summary_format_description.setText(QCoreApplication.translate("MainWindow", u"Format:", None))
         self.label_summary_format_content.setText(QCoreApplication.translate("MainWindow", u"(video file type)", None))
         self.label_summary_resolution_description.setText(QCoreApplication.translate("MainWindow", u"Resolution:", None))
@@ -641,18 +639,12 @@ class Ui_MainWindow(object):
         self.label_summary_frames_content.setText(QCoreApplication.translate("MainWindow", u"(frames)", None))
         self.label_summary_processed_Description.setText(QCoreApplication.translate("MainWindow", u"Already Processed:", None))
         self.label_summary_processed_content.setText(QCoreApplication.translate("MainWindow", u"(Yes/No)", None))
-#if QT_CONFIG(tooltip)
-        self.pushButton_summary_process.setToolTip("")
-#endif // QT_CONFIG(tooltip)
         self.pushButton_summary_process.setText(QCoreApplication.translate("MainWindow", u"Process", None))
         self.label_videoPreview_description.setText(QCoreApplication.translate("MainWindow", u"Video Preview:", None))
         self.label_videoPreview_image.setText(QCoreApplication.translate("MainWindow", u"Preview", None))
         self.pushButton_videoPreview_prev.setText(QCoreApplication.translate("MainWindow", u"Prev", None))
         self.pushButton_videoPreview_next.setText(QCoreApplication.translate("MainWindow", u"Next", None))
         self.tabWidget_content.setTabText(self.tabWidget_content.indexOf(self.tab_summary), QCoreApplication.translate("MainWindow", u"Summary", None))
-#if QT_CONFIG(tooltip)
-        self.tab_details.setToolTip("")
-#endif // QT_CONFIG(tooltip)
         self.label_indexedPeople_description.setText(QCoreApplication.translate("MainWindow", u"List of Detected People:", None))
         self.label_framePreview_description.setText(QCoreApplication.translate("MainWindow", u"Frame Preview:", None))
         self.label_framePreview_image.setText(QCoreApplication.translate("MainWindow", u"Preview", None))
@@ -673,4 +665,3 @@ class Ui_MainWindow(object):
         self.label_status.setText(QCoreApplication.translate("MainWindow", u"Processing....", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
     # retranslateUi
-
