@@ -98,7 +98,7 @@ class Frame:
             crops_path_list.append(crops_path)
         return crops_path_list
 
-    def create_person_list(self, indexed_person_list):
+    def create_person_list(self, indexed_person_list, video_title):
         label_list = self.read_label()
         new_indexed_person_list = []
         counter = 0
@@ -108,7 +108,7 @@ class Frame:
             label_line = label_list[counter]
             label_split = label_line.split(' ')
             person_id = int(label_split[5])
-            new_person = Person(person_id=person_id)
+            new_person = Person(person_id=person_id, video_title=video_title)
             new_indexed_person_list.append(new_person)
             return new_indexed_person_list
 
@@ -117,7 +117,7 @@ class Frame:
             label_split = label_line.split(' ')
             person_id = int(label_split[5])
 
-            new_person = Person(person_id=person_id)
+            new_person = Person(person_id=person_id, video_title=video_title)
 
             for person in indexed_person_list:
                 if new_person.person_id == person.person_id:
@@ -222,9 +222,9 @@ class Crop:
 
 class Person:
 
-    def __init__(self, person_id: Optional[int], has_montage=None):
+    def __init__(self, video_title, person_id: Optional[int], has_montage=None):
         self._person_id = person_id
-
+        self._video_title = video_title
         if has_montage is None:
             self._has_montage = False
         else:
@@ -242,3 +242,7 @@ class Person:
     @has_montage.setter
     def has_montage(self, has_montage):
         self._has_montage = has_montage
+
+    @property
+    def video_title(self):
+       return self._video_title

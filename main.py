@@ -11,6 +11,7 @@ from PySide6.QtCore import QStringListModel, QItemSelection
 from PySide6.QtGui import QPixmap, QStandardItemModel, QStandardItem
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase, QSqlTableModel
 
+from ImageProcessing import Person
 from VideoFrameLogic import VideoFrame
 from VideoIndexing import VideoDetails
 from pymediainfo import MediaInfo
@@ -37,15 +38,97 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         self.output_folder_path = r"./output/"
         self.temp_folder_path = r"./temp/"
 
+        self.input_video_list = []
+        self.processed_video_list = []
+        self.videodetails_list = []
         self.current_selected_video = None
+        self.current_selected_videodetail = None
         self._preview_frame_image_list = None
         self._preview_frame_image_counter = None
+
+        self.currentSelectedPerson = None
 
         # Setup
         # We're going to add an if condition where if the video is "processed" the details should not be unavailable
         #QTabWidget.setTabEnabled(self.ui.tabWidget_content, 1, False) # Disable "Details" tab
 
         # Create input/output folder if it doesn't exist
+        self.housekeeping()
+
+        # Create a preset selection list
+        #self.ui.comboBox_presetSelection_box.addItem()
+
+        # Startup
+        # Video Selection
+        self.create_videodetails()
+        self.load_combobox_videoSelection()
+
+        # Summary
+        self.ui.comboBox_videoSelection_box.setCurrentIndex(-1)
+        selected_videofile_path = os.path.join(self.input_folder_path, self.ui.comboBox_videoSelection_box.currentText())
+
+        # Event Handlers
+        self.ui.pushButton_summary_process.pressed.connect(lambda: self.process())
+        self.ui.pushButton_videoPreview_next.pressed.connect(self.video_preview_next)
+        self.ui.pushButton_videoPreview_prev.pressed.connect(self.video_preview_prev)
+        self.ui.comboBox_videoSelection_box.currentIndexChanged.connect(self._on_combobox_video_selection_changed)
+        self.ui.comboBox.currentIndexChanged.connect(self.test())
+
+        self.show()
+    # Functionalities
+    def on_startup(self):
+        pass
+
+    def create_videodetails(self):
+        def get_processed_videos():
+            try:
+                conn = sqlite3.connect("main.db")
+
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM VideoDetails")
+                all_entries = cursor.fetchall()
+                conn.close()
+
+                VideoDetails_list = []
+                for detail in all_entries:
+                    video_title, is_processed = detail
+                    VideoDetails_list.append(VideoDetails(video_title=video_title,is_processed=is_processed))
+
+                    return VideoDetails_list
+
+            except sqlite3.Error as e:
+                print(f"Error connecting to database:{e}")
+
+            except Exception as e:
+                print(f"An error occurred: {e}")
+
+        unprocessed_video_list = []
+        for video in os.listdir(self.input_folder_path):
+            try:
+                if video.endswith(".mp4"):
+                    unprocessed_video_list.append(str(video))
+                    self.input_video_list.append(str(video))
+            except Exception as e:
+                print(f"Error adding video: {e}")
+
+        processed_video_list = get_processed_videos()
+
+        # remove processed videos from unprocessed list
+        for video in unprocessed_video_list:
+            for processed_video in processed_video_list:
+                if video == processed_video.video_title:
+                    unprocessed_video_list.remove(video)
+
+        videodetails_list = []
+        for video in unprocessed_video_list:
+            new_videodetails = VideoDetails(video_title=video)
+            videodetails_list.append(new_videodetails)
+
+        videodetails_list.extend(processed_video_list)
+
+        self.videodetails_list = videodetails_list
+
+    def housekeeping(self):
         if not os.path.exists(self.input_folder_path):
             os.mkdir( self.input_folder_path)
         if not os.path.exists( self.output_folder_path):
@@ -59,33 +142,20 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
             except OSError as e:
                 print(f"Error deleting: {e}")
 
+    # Load combobox
+    def load_combobox_videoSelection(self):
 
-        # Create a preset selection list
-        #self.ui.comboBox_presetSelection_box.addItem()
+        # video_db_list = get_videodetails_sql()
+        # processed_video_list = check_for_processed_videos(video_db_list)
 
-        # Video Selection
-        self.load_combobox_videoSelection()
+        for video in self.videodetails_list:
+            try:
+                self.ui.comboBox_videoSelection_box.addItem(str(video.video_title))
+            except Exception as e:
+                print(f"Error adding video: {e}")
 
-        def load_combobox_presets(self):
-            pass
-
-        # Summary
-        selected_videofile_path = os.path.join(self.input_folder_path, self.ui.comboBox_videoSelection_box.currentText())
-
-        self.ui.pushButton_summary_process.pressed.connect(lambda: self.process())
-        self.ui.pushButton_videoPreview_next.pressed.connect(self.video_preview_next)
-        self.ui.pushButton_videoPreview_prev.pressed.connect(self.video_preview_prev)
-        self.ui.comboBox_videoSelection_box.currentIndexChanged.connect(self._on_combobox_video_selection_changed)
-
-        #x = QItemSelection.
-        #self.ui.tableView_indexedPeople.selectionModel().selectionChanged.connect()
-
-        #selection_model.selectionChanged.connect()
-
-        self.show()
-    # Functionalities
-    def selection_change(self):
-        print(self.ui.tableView_indexedPeople.selectedIndexes())
+    def load_combobox_presets(self):
+        pass
 
     def nothing(self):
         pass
@@ -93,57 +163,46 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
     def process(self):
         # begin YOLO so insert startyolo here
         self.ui.tabWidget_content.setTabEnabled(1,True)
-        self.load_detected_persons_tableview()
+        self.load_detected_persons_combobox()
+        self.ui.pushButton_summary_process.setDisabled(True)
 
-    # def load_detected_persons_tableview(self):
-    #     con = QSqlDatabase.addDatabase("QSQLITE")
-    #     con.setDatabaseName("main.db")
-    #     con.open()
-    #
-    #     sql_model = QSqlQueryModel()
-    #     sql_model.setQuery("SELECT * FROM Person")
-    #
-    #     sql_model.setHeaderData(0,Qt.Orientation.Horizontal,"person_id")
-    #
-    #     self.ui.tableView_indexedPeople.setModel(sql_model)
-    #     #self.ui.tableView_indexedPeople.setColumnHidden(1, True)
-    #     self.ui.tableView_indexedPeople.verticalHeader().hide()
-    #     self.ui.tableView_indexedPeople.setColumnWidth(0,150)
-    #     self.ui.tableView_indexedPeople.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-    #
-    #     pass
+    def load_detected_persons_combobox(self):
+        def load_persons():
+            try:
+                video_title = self.current_selected_videodetail
+                conn = sqlite3.connect('main.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT * FROM Person WHERE video_title = '{video_title.video_title}';")
+                all_entries = cursor.fetchall()
+                conn.close()
 
-    def load_detected_persons_tableview(self):
-        con = QSqlDatabase.addDatabase("QSQLITE")
-        con.setDatabaseName("main.db")
-        con.open()
+                person_list = []
+                for detail in all_entries:
+                    person_id, has_montage, video_title = detail
+                    person_list.append(person_id)
 
-        sql_model = QSqlQueryModel()
-        sql_model.setQuery("SELECT * FROM Person")
+                return person_list
 
-        sql_model.setHeaderData(0,Qt.Orientation.Horizontal,"person_id")
+            except sqlite3.Error as e:
+                print(f"Error connecting to database:{e}")
 
-        db = sqlite3.connect("main.db")
-        db2 = QSqlDatabase.addDatabase()
+            except Exception as e:
+                print(f"An error occurred: {e}")
 
-        model = QSqlTableModel(None, db)
-        model.setTable("your_table_name")  # Replace with your actual table name
-        model.select()
+        person_list = load_persons()
 
-        self.ui.tableView_indexedPeople.setModel(sql_model)
-        #self.ui.tableView_indexedPeople.setColumnHidden(1, True)
-        self.ui.tableView_indexedPeople.verticalHeader().hide()
-        self.ui.tableView_indexedPeople.setColumnWidth(0,150)
-        self.ui.tableView_indexedPeople.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-
+        for person in person_list:
+            self.ui.comboBox.addItem(str(person))
         pass
 
 
 
     def get_indexed_people(self):
         project_output_path = r".\output\Indexed\Thesis_FullOfficeCut_T300_5mins"
+        pass
 
-
+    def _on_combobox_detected_person_changed(self):
+        self.currentSelectedPerson = self.ui.comboBox.currentText()
         pass
 
     def _on_combobox_video_selection_changed(self):
@@ -212,26 +271,7 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
 
     # Get summary details
     def get_summary_details(self):
-        def check_video_if_processed(selected_video_title : Optional[str]):
-            try:
-                conn = sqlite3.connect('main.db')
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT video_title, is_processed FROM VideoDetails as vd WHERE vd.video_title = '{selected_video_title}';")
-                #cursor.execute(f"SELECT video_title FROM VideoDetails;")
-                entry = cursor.fetchone()
-                conn.close()
-
-                video_title = entry[0]
-                is_processed = entry[1]
-                video_details = VideoDetails(video_title=video_title, is_processed=is_processed)
-
-                return video_details
-
-            except sqlite3.Error as e:
-                print(f"Error connecting to database:{e}")
-            except Exception as e:
-                print(f"An error occurred: {e}")
-
+        self.current_selected_video = self.ui.comboBox_videoSelection_box.currentText()
         self.selected_video_filepath = os.path.join(self.input_folder_path, self.ui.comboBox_videoSelection_box.currentText())
         media_info = MediaInfo.parse(self.selected_video_filepath)
         track_info_list = []
@@ -265,13 +305,24 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         # check if video is processed
         filename = os.path.basename(self.selected_video_filepath)
         video_title, extension = filename.split('.')
-        is_processed = check_video_if_processed(str(video_title))
+        #is_processed = check_video_if_processed(str(video_title))
+
+        get_video = None
+        for video in self.videodetails_list:
+            if video.video_title == self.current_selected_video:
+                get_video = video
+                self.current_selected_videodetail = video
+
+        is_processed = get_video.is_processed
         if (is_processed):
             processed = "Yes"
             self.ui.tabWidget_content.setTabEnabled(1,True)
+            self.ui.pushButton_summary_process.setDisabled(True)
+            self.load_detected_persons_combobox()
         else:
             processed = "No"
             self.ui.tabWidget_content.setTabEnabled(1,False)
+            self.ui.pushButton_summary_process.setEnabled(True)
 
         track_info_list.append(str(video_info.format))
         track_info_list.append(str(resolution))
@@ -331,30 +382,7 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
             self.ui.label_videoPreview_image.setPixmap(image)
 
 
- # Load combobox
-    def load_combobox_videoSelection(self):
-        def check_for_processed_videos(video_db_list : Optional[list[VideoDetails]]):
-            processed_video_list = []
-            for video in os.listdir(self.input_folder_path):
-                video_title, extension = video.split('.')
-                for video_in_db in video_db_list:
-                    if video_title == video_in_db.video_title:
-                        processed_video_list.append(video_in_db)
-                        break
-            return processed_video_list
-
-        #video_db_list = get_videodetails_sql()
-        #processed_video_list = check_for_processed_videos(video_db_list)
-
-        for video in os.listdir(self.input_folder_path):
-            try:
-                if video.endswith(".mp4"):
-                    self.ui.comboBox_videoSelection_box.addItem(str(video))
-            except Exception as e:
-                print(f"Error adding video: {e}")
-
-
-    def printHelloWorld(self):
+    def test(self):
         print("Hello World")
 
     def clear_temp_folder(self):

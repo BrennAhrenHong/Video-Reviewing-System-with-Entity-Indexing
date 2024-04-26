@@ -27,6 +27,7 @@ class VideoDetails:
 
         self.make_directory(self.input_folder)
         self.make_directory(self.output_folder)
+        self.make_directory(self.inferred_folder)
         self.make_directory(self.processed_folder)
 
     def save_videodetails_sql(self):
@@ -51,9 +52,9 @@ class VideoDetails:
         conn = sqlite3.connect(r'main.db')
         cursor = conn.cursor()
         for person in indexed_persons_list:
-            cursor.execute(f"INSERT INTO Person(person_id, has_montage) "
-                                f"VALUES (?, ?)",
-                    (person.person_id, person.has_montage))
+            cursor.execute(f"INSERT INTO Person(person_id, has_montage, video_title) "
+                                f"VALUES (?, ?, ?)",
+                    (person.person_id, person.has_montage, person.video_title))
         conn.commit()
         conn.close()
     def save_crop_sql(self, crop_list : Optional[list[Crop]]):
@@ -120,8 +121,8 @@ class VideoDetails:
 
             person_list = []
             for detail in all_entries:
-                person_id, has_montage = detail
-                person_list.append(Person(person_id=person_id, has_montage=has_montage))
+                person_id, has_montage, video_title = detail
+                person_list.append(Person(person_id=person_id, has_montage=has_montage, video_title=video_title))
 
             return person_list
 
@@ -190,10 +191,6 @@ class VideoDetails:
                 extract_frame_number = "1"
             return extract_frame_number
 
-        if not os.path.exists(self.inferred_folder):
-            print("ERROR! No inferencing occurred")
-            pass
-
         indexed_persons_list = []
         processed_frames_list = []
         crop_list = []
@@ -207,7 +204,7 @@ class VideoDetails:
             frame_number = extract_frame_number(frame_folder=os.path.basename(frame_folder_path))
             frame = Frame(frame_number=int(frame_number[0]), frame_folder_path=frame_folder_path)
 
-            person_list = frame.create_person_list(indexed_persons_list)
+            person_list = frame.create_person_list(indexed_persons_list, self.video_title)
             indexed_persons_list.extend(person_list)
 
             # Create crops
@@ -286,7 +283,7 @@ class VideoDetails:
             os.mkdir(directory)
 
 if __name__ == "__main__":
-    x = VideoDetails(video_title="Thesis_FullOfficeCut_T300_5mins", is_processed=True)
+    x = VideoDetails(video_title="Thesis_FullOfficeCut_T300_5mins.mp4", is_processed=False)
     x.index_persons()
     x.build_indexed_persons()
     #x.sql()

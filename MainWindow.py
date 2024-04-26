@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'MainWindow_SummaryPage_7HrYrhs.ui'
+## Form generated from reading UI file 'MainWindow_SummaryPage_8_comboboxxFkRTI.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.0
 ##
@@ -16,11 +16,13 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
-    QGroupBox, QHBoxLayout, QHeaderView, QLabel,
-    QLayout, QMainWindow, QProgressBar, QPushButton,
-    QRadioButton, QSizePolicy, QSpacerItem, QStatusBar,
-    QTabWidget, QTableView, QToolBar, QVBoxLayout,
-    QWidget)
+    QGroupBox, QHBoxLayout, QLabel, QLayout,
+    QMainWindow, QProgressBar, QPushButton, QRadioButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
+    QToolBar, QVBoxLayout, QWidget)
+
+from MainWindow_ExtraSettings import load_extra_ui
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -77,7 +79,6 @@ class Ui_MainWindow(object):
         sizePolicy3.setHeightForWidth(self.comboBox_videoSelection_box.sizePolicy().hasHeightForWidth())
         self.comboBox_videoSelection_box.setSizePolicy(sizePolicy3)
         self.comboBox_videoSelection_box.setMinimumSize(QSize(300, 0))
-        self.comboBox_videoSelection_box.setPlaceholderText("(select or add video)")
 
         self.horizontalLayout_videoSelection.addWidget(self.comboBox_videoSelection_box)
 
@@ -101,8 +102,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_videoSelection)
 
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_Preset = QHBoxLayout()
+        self.horizontalLayout_Preset.setObjectName(u"horizontalLayout_Preset")
         self.label_presetSelection_description = QLabel(self.centralwidget)
         self.label_presetSelection_description.setObjectName(u"label_presetSelection_description")
         sizePolicy2.setHeightForWidth(self.label_presetSelection_description.sizePolicy().hasHeightForWidth())
@@ -110,28 +111,26 @@ class Ui_MainWindow(object):
         self.label_presetSelection_description.setMinimumSize(QSize(50, 0))
         self.label_presetSelection_description.setFont(font)
 
-        self.horizontalLayout_2.addWidget(self.label_presetSelection_description)
+        self.horizontalLayout_Preset.addWidget(self.label_presetSelection_description)
 
         self.comboBox_presetSelection_box = QComboBox(self.centralwidget)
         self.comboBox_presetSelection_box.setObjectName(u"comboBox_presetSelection_box")
         sizePolicy3.setHeightForWidth(self.comboBox_presetSelection_box.sizePolicy().hasHeightForWidth())
         self.comboBox_presetSelection_box.setSizePolicy(sizePolicy3)
         self.comboBox_presetSelection_box.setMinimumSize(QSize(300, 0))
-        self.comboBox_presetSelection_box.setPlaceholderText("(select preset option)")
 
-        self.horizontalLayout_2.addWidget(self.comboBox_presetSelection_box)
+        self.horizontalLayout_Preset.addWidget(self.comboBox_presetSelection_box)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
+        self.horizontalLayout_Preset.addItem(self.horizontalSpacer_2)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
+        self.verticalLayout.addLayout(self.horizontalLayout_Preset)
 
         self.tabWidget_content = QTabWidget(self.centralwidget)
         self.tabWidget_content.setObjectName(u"tabWidget_content")
         self.tabWidget_content.setMaximumSize(QSize(16777215, 500))
-        self.tabWidget_content.setTabEnabled(1,False) #Disable Details Tab at startup
         font1 = QFont()
         font1.setBold(False)
         self.tabWidget_content.setFont(font1)
@@ -271,8 +270,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_summary.addItem(self.verticalSpacer_2)
 
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_alreadyProcessed = QHBoxLayout()
+        self.horizontalLayout_alreadyProcessed.setObjectName(u"horizontalLayout_alreadyProcessed")
         self.label_summary_processed_Description = QLabel(self.tab_summary)
         self.label_summary_processed_Description.setObjectName(u"label_summary_processed_Description")
         sizePolicy3.setHeightForWidth(self.label_summary_processed_Description.sizePolicy().hasHeightForWidth())
@@ -280,7 +279,7 @@ class Ui_MainWindow(object):
         self.label_summary_processed_Description.setMinimumSize(QSize(160, 0))
         self.label_summary_processed_Description.setFont(font)
 
-        self.horizontalLayout_6.addWidget(self.label_summary_processed_Description)
+        self.horizontalLayout_alreadyProcessed.addWidget(self.label_summary_processed_Description)
 
         self.label_summary_processed_content = QLabel(self.tab_summary)
         self.label_summary_processed_content.setObjectName(u"label_summary_processed_content")
@@ -290,10 +289,10 @@ class Ui_MainWindow(object):
         sizePolicy5.setHeightForWidth(self.label_summary_processed_content.sizePolicy().hasHeightForWidth())
         self.label_summary_processed_content.setSizePolicy(sizePolicy5)
 
-        self.horizontalLayout_6.addWidget(self.label_summary_processed_content)
+        self.horizontalLayout_alreadyProcessed.addWidget(self.label_summary_processed_content)
 
 
-        self.verticalLayout_summary.addLayout(self.horizontalLayout_6)
+        self.verticalLayout_summary.addLayout(self.horizontalLayout_alreadyProcessed)
 
         self.verticalSpacer = QSpacerItem(20, 300, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
@@ -345,13 +344,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_videoPreview_control.setObjectName(u"horizontalLayout_videoPreview_control")
         self.pushButton_videoPreview_prev = QPushButton(self.tab_summary)
         self.pushButton_videoPreview_prev.setObjectName(u"pushButton_videoPreview_prev")
-        self.pushButton_videoPreview_prev.setEnabled(False)
 
         self.horizontalLayout_videoPreview_control.addWidget(self.pushButton_videoPreview_prev)
 
         self.pushButton_videoPreview_next = QPushButton(self.tab_summary)
         self.pushButton_videoPreview_next.setObjectName(u"pushButton_videoPreview_next")
-        self.pushButton_videoPreview_next.setEnabled(False)
 
         self.horizontalLayout_videoPreview_control.addWidget(self.pushButton_videoPreview_next)
 
@@ -381,11 +378,44 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_indexedList.addWidget(self.label_indexedPeople_description)
 
-        self.tableView_indexedPeople = QTableView(self.tab_details)
-        self.tableView_indexedPeople.setObjectName(u"tableView_indexedPeople")
-        self.tableView_indexedPeople.setFrameShape(QFrame.Shape.Box)
+        self.comboBox = QComboBox(self.tab_details)
+        self.comboBox.setObjectName(u"comboBox")
 
-        self.verticalLayout_indexedList.addWidget(self.tableView_indexedPeople)
+        self.verticalLayout_indexedList.addWidget(self.comboBox)
+
+        self.horizontalLayout_montageValue = QHBoxLayout()
+        self.horizontalLayout_montageValue.setObjectName(u"horizontalLayout_montageValue")
+        self.label_montage_description = QLabel(self.tab_details)
+        self.label_montage_description.setObjectName(u"label_montage_description")
+
+        self.horizontalLayout_montageValue.addWidget(self.label_montage_description)
+
+        self.label_montage_value = QLabel(self.tab_details)
+        self.label_montage_value.setObjectName(u"label_montage_value")
+
+        self.horizontalLayout_montageValue.addWidget(self.label_montage_value)
+
+
+        self.verticalLayout_indexedList.addLayout(self.horizontalLayout_montageValue)
+
+        self.horizontalLayout_crops = QHBoxLayout()
+        self.horizontalLayout_crops.setObjectName(u"horizontalLayout_crops")
+        self.label_crops_description = QLabel(self.tab_details)
+        self.label_crops_description.setObjectName(u"label_crops_description")
+
+        self.horizontalLayout_crops.addWidget(self.label_crops_description)
+
+        self.label_crops_value = QLabel(self.tab_details)
+        self.label_crops_value.setObjectName(u"label_crops_value")
+
+        self.horizontalLayout_crops.addWidget(self.label_crops_value)
+
+
+        self.verticalLayout_indexedList.addLayout(self.horizontalLayout_crops)
+
+        self.verticalSpacer_9 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_indexedList.addItem(self.verticalSpacer_9)
 
 
         self.horizontalLayout_detailsTab.addLayout(self.verticalLayout_indexedList)
@@ -489,26 +519,26 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_personCropPreview = QVBoxLayout()
         self.verticalLayout_personCropPreview.setObjectName(u"verticalLayout_personCropPreview")
-        self.horizontalLayout_11 = QHBoxLayout()
-        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
-        self.horizontalLayout_11.setContentsMargins(0, -1, -1, -1)
+        self.horizontalLayout_personCropPreview_description = QHBoxLayout()
+        self.horizontalLayout_personCropPreview_description.setObjectName(u"horizontalLayout_personCropPreview_description")
+        self.horizontalLayout_personCropPreview_description.setContentsMargins(0, -1, -1, -1)
         self.label_personCropPreviewDescription = QLabel(self.tab_details)
         self.label_personCropPreviewDescription.setObjectName(u"label_personCropPreviewDescription")
         sizePolicy3.setHeightForWidth(self.label_personCropPreviewDescription.sizePolicy().hasHeightForWidth())
         self.label_personCropPreviewDescription.setSizePolicy(sizePolicy3)
         self.label_personCropPreviewDescription.setFont(font)
 
-        self.horizontalLayout_11.addWidget(self.label_personCropPreviewDescription)
+        self.horizontalLayout_personCropPreview_description.addWidget(self.label_personCropPreviewDescription)
 
         self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_11.addItem(self.horizontalSpacer_6)
+        self.horizontalLayout_personCropPreview_description.addItem(self.horizontalSpacer_6)
 
 
-        self.verticalLayout_personCropPreview.addLayout(self.horizontalLayout_11)
+        self.verticalLayout_personCropPreview.addLayout(self.horizontalLayout_personCropPreview_description)
 
-        self.horizontalLayout_8 = QHBoxLayout()
-        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.horizontalLayout_personCropPreview_image = QHBoxLayout()
+        self.horizontalLayout_personCropPreview_image.setObjectName(u"horizontalLayout_personCropPreview_image")
         self.label_personCropPreviewImage = QLabel(self.tab_details)
         self.label_personCropPreviewImage.setObjectName(u"label_personCropPreviewImage")
         sizePolicy3.setHeightForWidth(self.label_personCropPreviewImage.sizePolicy().hasHeightForWidth())
@@ -521,10 +551,10 @@ class Ui_MainWindow(object):
         self.label_personCropPreviewImage.setScaledContents(True)
         self.label_personCropPreviewImage.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_8.addWidget(self.label_personCropPreviewImage)
+        self.horizontalLayout_personCropPreview_image.addWidget(self.label_personCropPreviewImage)
 
 
-        self.verticalLayout_personCropPreview.addLayout(self.horizontalLayout_8)
+        self.verticalLayout_personCropPreview.addLayout(self.horizontalLayout_personCropPreview_image)
 
         self.label_cropCounter = QLabel(self.tab_details)
         self.label_cropCounter.setObjectName(u"label_cropCounter")
@@ -532,25 +562,25 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_personCropPreview.addWidget(self.label_cropCounter)
 
-        self.horizontalLayout_7 = QHBoxLayout()
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.horizontalLayout_personCropPreview_control = QHBoxLayout()
+        self.horizontalLayout_personCropPreview_control.setObjectName(u"horizontalLayout_personCropPreview_control")
         self.pushButton_personCropPreview_auto = QPushButton(self.tab_details)
         self.pushButton_personCropPreview_auto.setObjectName(u"pushButton_personCropPreview_auto")
 
-        self.horizontalLayout_7.addWidget(self.pushButton_personCropPreview_auto)
+        self.horizontalLayout_personCropPreview_control.addWidget(self.pushButton_personCropPreview_auto)
 
         self.pushButton_personCropPreview_prev = QPushButton(self.tab_details)
         self.pushButton_personCropPreview_prev.setObjectName(u"pushButton_personCropPreview_prev")
 
-        self.horizontalLayout_7.addWidget(self.pushButton_personCropPreview_prev)
+        self.horizontalLayout_personCropPreview_control.addWidget(self.pushButton_personCropPreview_prev)
 
         self.pushButton_personCropPreview_next = QPushButton(self.tab_details)
         self.pushButton_personCropPreview_next.setObjectName(u"pushButton_personCropPreview_next")
 
-        self.horizontalLayout_7.addWidget(self.pushButton_personCropPreview_next)
+        self.horizontalLayout_personCropPreview_control.addWidget(self.pushButton_personCropPreview_next)
 
 
-        self.verticalLayout_personCropPreview.addLayout(self.horizontalLayout_7)
+        self.verticalLayout_personCropPreview.addLayout(self.horizontalLayout_personCropPreview_control)
 
         self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -594,7 +624,6 @@ class Ui_MainWindow(object):
         self.progressBar_status.setValue(0)
         self.progressBar_status.setTextVisible(True)
         self.progressBar_status.setInvertedAppearance(False)
-        self.progressBar_status.hide()
 
         self.verticalLayout_statusBar.addWidget(self.progressBar_status)
 
@@ -612,7 +641,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget_content.setCurrentIndex(0)
-
+        load_extra_ui(self)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -654,6 +683,10 @@ class Ui_MainWindow(object):
         self.tab_details.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.label_indexedPeople_description.setText(QCoreApplication.translate("MainWindow", u"List of Detected People:", None))
+        self.label_montage_description.setText(QCoreApplication.translate("MainWindow", u"Montage:", None))
+        self.label_montage_value.setText(QCoreApplication.translate("MainWindow", u"(Yes/No)", None))
+        self.label_crops_description.setText(QCoreApplication.translate("MainWindow", u"Crops:", None))
+        self.label_crops_value.setText(QCoreApplication.translate("MainWindow", u"(#)", None))
         self.label_framePreview_description.setText(QCoreApplication.translate("MainWindow", u"Frame Preview:", None))
         self.label_framePreview_image.setText(QCoreApplication.translate("MainWindow", u"Preview", None))
         self.groupBox_montagePanel.setTitle(QCoreApplication.translate("MainWindow", u"Montage Panel", None))
@@ -672,5 +705,7 @@ class Ui_MainWindow(object):
         self.tabWidget_content.setTabText(self.tabWidget_content.indexOf(self.tab_details), QCoreApplication.translate("MainWindow", u"Details", None))
         self.label_status.setText(QCoreApplication.translate("MainWindow", u"Processing....", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
+
+
     # retranslateUi
 
