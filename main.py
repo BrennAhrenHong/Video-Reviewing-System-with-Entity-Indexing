@@ -7,19 +7,23 @@ import shutil
 
 from typing import Optional
 
-from PySide6.QtCore import QStringListModel
+from PySide6.QtCore import QStringListModel, QItemSelection
 from PySide6.QtGui import QPixmap, QStandardItemModel, QStandardItem
+from PySide6.QtSql import QSqlQueryModel, QSqlDatabase, QSqlTableModel
+
 from VideoFrameLogic import VideoFrame
 from VideoIndexing import VideoDetails
 from pymediainfo import MediaInfo
 
 from MainWindow import Ui_MainWindow
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
-    QGroupBox, QHBoxLayout, QLabel, QListView,
-    QMainWindow, QMenuBar, QProgressBar, QPushButton,
-    QRadioButton, QSizePolicy, QSpacerItem, QStatusBar,
-    QTabWidget, QToolBar, QVBoxLayout, QWidget)
+                               QGroupBox, QHBoxLayout, QLabel, QListView,
+                               QMainWindow, QMenuBar, QProgressBar, QPushButton,
+                               QRadioButton, QSizePolicy, QSpacerItem, QStatusBar,
+                               QTabWidget, QToolBar, QVBoxLayout, QWidget, QHeaderView, QTableView, QAbstractItemView)
 
 class SummaryLogic(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -73,37 +77,65 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         self.ui.pushButton_videoPreview_prev.pressed.connect(self.video_preview_prev)
         self.ui.comboBox_videoSelection_box.currentIndexChanged.connect(self._on_combobox_video_selection_changed)
 
+        #x = QItemSelection.
+        #self.ui.tableView_indexedPeople.selectionModel().selectionChanged.connect()
+
+        #selection_model.selectionChanged.connect()
+
         self.show()
     # Functionalities
+    def selection_change(self):
+        print(self.ui.tableView_indexedPeople.selectedIndexes())
+
+    def nothing(self):
+        pass
+
     def process(self):
         # begin YOLO so insert startyolo here
         self.ui.tabWidget_content.setTabEnabled(1,True)
-        self.load_detected_persons_listview()
+        self.load_detected_persons_tableview()
 
-    def load_detected_persons_listview(self):
-        model = QStandardItemModel()
+    # def load_detected_persons_tableview(self):
+    #     con = QSqlDatabase.addDatabase("QSQLITE")
+    #     con.setDatabaseName("main.db")
+    #     con.open()
+    #
+    #     sql_model = QSqlQueryModel()
+    #     sql_model.setQuery("SELECT * FROM Person")
+    #
+    #     sql_model.setHeaderData(0,Qt.Orientation.Horizontal,"person_id")
+    #
+    #     self.ui.tableView_indexedPeople.setModel(sql_model)
+    #     #self.ui.tableView_indexedPeople.setColumnHidden(1, True)
+    #     self.ui.tableView_indexedPeople.verticalHeader().hide()
+    #     self.ui.tableView_indexedPeople.setColumnWidth(0,150)
+    #     self.ui.tableView_indexedPeople.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+    #
+    #     pass
 
-        #data = ListViewPerson(id=0,crops=10)
-        data = ["item1", "item2", "item3"]
-        stringlistmodel = QStringListModel(data)
+    def load_detected_persons_tableview(self):
+        con = QSqlDatabase.addDatabase("QSQLITE")
+        con.setDatabaseName("main.db")
+        con.open()
 
-        #Listview set model
-        self.ui.listView_indexedPeople.setModel(stringlistmodel)
+        sql_model = QSqlQueryModel()
+        sql_model.setQuery("SELECT * FROM Person")
 
-        #name_item = QStandardItem()
-        #name_item.setText("person A")
-        #id_item = QStandardItem()
-        #id_item.setText("1")
-        #crops_item = QStandardItem()
-        #crops_item.setText("100")
-        #model.appendColumn([name_item])
-        #model.appendColumn([id_item])
-        #model.appendColumn([crops_item])
+        sql_model.setHeaderData(0,Qt.Orientation.Horizontal,"person_id")
 
+        db = sqlite3.connect("main.db")
+        db2 = QSqlDatabase.addDatabase()
 
-        #instance = DetailsLogic()
-        #instance.load_listview(self.ui.listView_indexedPeople)
-        #self.ui.listView_indexedPeople.setModel()
+        model = QSqlTableModel(None, db)
+        model.setTable("your_table_name")  # Replace with your actual table name
+        model.select()
+
+        self.ui.tableView_indexedPeople.setModel(sql_model)
+        #self.ui.tableView_indexedPeople.setColumnHidden(1, True)
+        self.ui.tableView_indexedPeople.verticalHeader().hide()
+        self.ui.tableView_indexedPeople.setColumnWidth(0,150)
+        self.ui.tableView_indexedPeople.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+
         pass
 
 
@@ -342,7 +374,7 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         print("video_presetSelection_combobox_count:", self.ui.comboBox_presetSelection_box.count())
 
 
-class ListViewPerson:
+class TableViewPerson:
     def __init__(self, id, crops):
         self.id = id
         self.crops = crops
