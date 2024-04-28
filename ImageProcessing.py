@@ -61,7 +61,7 @@ class Frame:
         frame_img = None
         for file in os.listdir(self._frame_folder_path):
             if file.endswith((".jpg", ".jpeg", ".png")):
-                frame_img = os.path.join(self._frame_folder, file)
+                frame_img = os.path.join(self.frame_folder_path, file)
                 break
         return frame_img
 

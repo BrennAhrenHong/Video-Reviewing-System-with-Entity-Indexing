@@ -9,4 +9,11 @@ def load_extra_ui(self):
     self.label_status.setText("Idle")
     #self.progressBar_status.hide()
 
+
+    self.pushButton_personCropPreview_auto.setCheckable(True)
     self.tabWidget_content.setTabEnabled(1, False)
+    #self.pushButton_personCropPreview_auto.setAutoRepeat(True)
+    #self.pushButton_personCropPreview_auto.setAutoRepeatInterval(2)
+    #self.pushButton_personCropPreview_auto.setAutoRepeatDelay(2)
+
+    #self.tab_details.setEnabled(False)

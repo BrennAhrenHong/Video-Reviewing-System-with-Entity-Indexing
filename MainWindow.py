@@ -131,6 +131,7 @@ class Ui_MainWindow(object):
         self.tabWidget_content = QTabWidget(self.centralwidget)
         self.tabWidget_content.setObjectName(u"tabWidget_content")
         self.tabWidget_content.setMaximumSize(QSize(16777215, 500))
+
         font1 = QFont()
         font1.setBold(False)
         self.tabWidget_content.setFont(font1)
@@ -378,10 +379,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_indexedList.addWidget(self.label_indexedPeople_description)
 
-        self.comboBox = QComboBox(self.tab_details)
-        self.comboBox.setObjectName(u"comboBox")
+        self.comboBox_detectedPeople_list = QComboBox(self.tab_details)
+        self.comboBox_detectedPeople_list.setObjectName(u"comboBox_detectedPeople_list")
 
-        self.verticalLayout_indexedList.addWidget(self.comboBox)
+        self.verticalLayout_indexedList.addWidget(self.comboBox_detectedPeople_list)
 
         self.horizontalLayout_montageValue = QHBoxLayout()
         self.horizontalLayout_montageValue.setObjectName(u"horizontalLayout_montageValue")

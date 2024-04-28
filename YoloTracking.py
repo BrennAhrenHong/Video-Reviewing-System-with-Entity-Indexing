@@ -52,7 +52,7 @@ def start_yolo(video_source, model, output_path, imgsz=1280, iou=0.8, conf=0.5, 
             #annotated_frame = results[0].plot()
 
             # write
-            out.write(annotated_frame)
+            #out.write(annotated_frame)
 
             # Display the annotated frame
             #cv2.imshow("YOLOv8 Tracking", annotated_frame)
