@@ -41,9 +41,9 @@ class VideoDetails:
         conn = sqlite3.connect('main.db')
         cursor = conn.cursor()
         for frame in processed_frame_list:
-            cursor.execute(f"INSERT INTO Frame(frame_number, frame_folder_path, frame_folder, frame_image, label_file_path) "
-                                f"VALUES (?, ?, ?, ?, ?)",
-                    (frame.frame_number, frame.frame_folder_path, frame.frame_folder, frame.frame_image, frame.label_file_path))
+            cursor.execute(f"INSERT INTO Frame(frame_id, frame_number, frame_folder_path, frame_folder, frame_image, label_file_path, video_title)"
+                                f"VALUES (NULL, ?, ?, ?, ?, ?, ?)",
+                    (frame.frame_number, frame.frame_folder_path, frame.frame_folder, frame.frame_image, frame.label_file_path, frame.video_title))
         conn.commit()
         conn.close()
 
@@ -52,8 +52,8 @@ class VideoDetails:
         conn = sqlite3.connect(r'main.db')
         cursor = conn.cursor()
         for person in indexed_persons_list:
-            cursor.execute(f"INSERT INTO Person(person_id, has_montage, video_title) "
-                                f"VALUES (?, ?, ?)",
+            cursor.execute(f"INSERT INTO Person(person_name, person_id, has_montage, video_title) "
+                                f"VALUES (NULL, ?, ?, ?)",
                     (person.person_id, person.has_montage, person.video_title))
         conn.commit()
         conn.close()
@@ -61,9 +61,9 @@ class VideoDetails:
         conn = sqlite3.connect('main.db')
         cursor = conn.cursor()
         for crop in crop_list:
-            cursor.execute(f"INSERT INTO Crop(crop_id, person_id, frame_number, yolo_class, crop_path, label_line, frame_image)"
-                                f" VALUES (?, ?, ?, ?, ?, ? ,?)",
-                    (crop.crop_id, crop.person_id, crop.frame_number, crop.yolo_class, crop.crop_path, crop.label_line, crop.frame_image))
+            cursor.execute(f"INSERT INTO Crop(crop_name, crop_id, person_id, video_title, frame_number, yolo_class, crop_path, label_line, frame_image)"
+                                f" VALUES (NULL, ?, ?, ?, ?, ?, ?, ? ,?)",
+                    (crop.crop_id, crop.person_id, crop.video_title, crop.frame_number, crop.yolo_class, crop.crop_path, crop.label_line, crop.frame_image))
         conn.commit()
         conn.close()
 
@@ -93,13 +93,13 @@ class VideoDetails:
         try:
             conn = sqlite3.connect('main.db')
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM Frame")
+            cursor.execute("SELECT * FROM Frame WHERE video_title = '{video_title}';")
             all_entries = cursor.fetchall()
             conn.close()
 
             frame_list = []
             for detail in all_entries:
-                frame_number, frame_folder_path, frame_folder, frame_image, label_file_path = detail
+                frame_id, frame_number, frame_folder_path, frame_folder, frame_image, label_file_path, video_title = detail
                 frame_list.append(Frame(frame_number=frame_number,frame_folder_path=frame_folder_path
                                   ,frame_folder=frame_folder, frame_image=frame_image, label_file_path=label_file_path))
 
@@ -115,13 +115,13 @@ class VideoDetails:
         try:
             conn = sqlite3.connect('main.db')
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM Person")
+            cursor.execute(f"SELECT * FROM Person WHERE video_title = '{self.video_title}';")
             all_entries = cursor.fetchall()
             conn.close()
 
             person_list = []
             for detail in all_entries:
-                person_id, has_montage, video_title = detail
+                person_name, person_id, has_montage, video_title = detail
                 person_list.append(Person(person_id=person_id, has_montage=has_montage, video_title=video_title))
 
             return person_list
@@ -136,20 +136,21 @@ class VideoDetails:
         try:
             conn = sqlite3.connect('main.db')
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM Crop")
+            cursor.execute("SELECT * FROM Crop WHERE video_title = '{video_title}';")
             all_entries = cursor.fetchall()
             conn.close()
 
             list = []
             for detail in all_entries:
-                crop_id, person_id, frame_number, yolo_class, crop_path, label_line, frame_image = detail
+                crop_name, crop_id, video_title, person_id, frame_number, yolo_class, crop_path, label_line, frame_image = detail
                 list.append(Crop(crop_id=crop_id,
                                  person_id=person_id,
                                  frame_number=frame_number
                                  ,yolo_class=yolo_class,
                                  crop_path=crop_path,
                                  label_line=label_line
-                                 ,frame_image=frame_image))
+                                 ,frame_image=frame_image
+                                 ,video_title=video_title))
 
         except sqlite3.Error as e:
             print(f"Error connecting to database:{e}")
@@ -161,20 +162,21 @@ class VideoDetails:
         try:
             conn = sqlite3.connect('main.db')
             cursor = conn.cursor()
-            cursor.execute(f"SELECT * FROM Crop WHERE person_id = {person_id};")
+            cursor.execute(f"SELECT * FROM Crop WHERE person_id = {person_id} AND video_title = '{self.video_title}';")
             all_entries = cursor.fetchall()
             conn.close()
 
             crop_list = []
             for detail in all_entries:
-                crop_id, person_id, frame_number, yolo_class, crop_path, label_line, frame_image = detail
+                crop_name, crop_id, person_id, video_title, frame_number, yolo_class, crop_path, label_line, frame_image = detail
                 crop_list.append(Crop(crop_id=crop_id,
-                                     person_id=person_id,
-                                     frame_number=frame_number,
-                                     yolo_class=yolo_class,
-                                     crop_path=crop_path,
-                                     label_line=label_line,
-                                     frame_image=frame_image))
+                                         person_id=person_id,
+                                         frame_number=frame_number,
+                                         video_title=video_title,
+                                         yolo_class=yolo_class,
+                                         crop_path=crop_path,
+                                         label_line=label_line,
+                                         frame_image=frame_image))
 
             return crop_list
 
@@ -195,14 +197,14 @@ class VideoDetails:
         processed_frames_list = []
         crop_list = []
         crop_count = 0
-        frame_folders = os.path.join(self.inferred_folder, self.video_title)
+        frame_folders = os.path.join(self.inferred_folder, self.video_title, "inference_output")
         for folder in os.listdir(frame_folders):
             frame_folder_path = os.path.join(frame_folders, folder)
             if (len(os.listdir(frame_folder_path)) != 3):  #Check if the folder is not corrupted
                 continue
 
             frame_number = extract_frame_number(frame_folder=os.path.basename(frame_folder_path))
-            frame = Frame(frame_number=int(frame_number[0]), frame_folder_path=frame_folder_path)
+            frame = Frame(frame_number=int(frame_number[0]), frame_folder_path=frame_folder_path, video_title=self.video_title)
 
             person_list = frame.create_person_list(indexed_persons_list, self.video_title)
             indexed_persons_list.extend(person_list)

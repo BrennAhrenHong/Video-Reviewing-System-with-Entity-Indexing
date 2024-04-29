@@ -8,9 +8,10 @@ from typing import Optional
 class Frame:
 
     # Properties
-    def __init__(self, frame_number: Optional[int], frame_folder_path, frame_folder=None, frame_image = None, label_file_path=None):
+    def __init__(self, frame_number: Optional[int], frame_folder_path, video_title, frame_folder=None, frame_image = None, label_file_path=None):
         self._frame_number = frame_number
         self._frame_folder_path = frame_folder_path
+        self._video_title = video_title
 
         if frame_folder is None:
             self._frame_folder = os.path.basename(self.frame_folder_path)
@@ -26,6 +27,10 @@ class Frame:
             self._label_file_path = self.find_label_file_path()
         else:
             self._label_file_path = label_file_path
+
+    @property
+    def video_title(self):
+        return self._video_title
 
     @property
     def frame_folder_path(self):
@@ -107,7 +112,10 @@ class Frame:
         if len(indexed_person_list) == 0 and len(label_list) > counter:
             label_line = label_list[counter]
             label_split = label_line.split(' ')
-            person_id = int(label_split[5])
+            if(len(label_split) < 6):
+                person_id = 0
+            else:
+                person_id = int(label_split[5])
             new_person = Person(person_id=person_id, video_title=video_title)
             new_indexed_person_list.append(new_person)
             return new_indexed_person_list
@@ -115,7 +123,10 @@ class Frame:
         while len(label_list) > counter:
             label_line = label_list[counter]
             label_split = label_line.split(' ')
-            person_id = int(label_split[5])
+            if(len(label_split) < 6):
+                person_id = 0
+            else:
+                person_id = int(label_split[len(label_split) - 1])
 
             new_person = Person(person_id=person_id, video_title=video_title)
 
@@ -145,9 +156,12 @@ class Frame:
             crop = crops_list_path
             label_line = label_list[counter]
             label_split = label_line.split(' ')
-            person_id = int(label_split[5])
+            if(len(label_split) < 6):
+                person_id = 0
+            else:
+                person_id = int(label_split[5])
 
-            new_crop = Crop(crop_id=crop_id, person_id=person_id, frame_number=self.frame_number, yolo_class=0, crop_path=crop[counter], label_line=label_line,
+            new_crop = Crop(crop_id=crop_id, person_id=person_id, video_title=self.video_title, frame_number=self.frame_number, yolo_class=0, crop_path=crop[counter], label_line=label_line,
                             frame_image=self.frame_image)
             crop_list.append(new_crop)
             counter += 1
@@ -159,9 +173,10 @@ class Frame:
 class Crop:
 
     #def __init__(self, yolo_class, crop_path, label, frame: Optional[Frame]):
-    def __init__(self, crop_id, person_id, frame_number, yolo_class, crop_path, label_line, frame_image):
+    def __init__(self, crop_id, person_id, video_title, frame_number, yolo_class, crop_path, label_line, frame_image):
         self._crop_id = crop_id
         self._person_id = person_id
+        self.video_title = video_title
         self._frame_number = frame_number
         self._yolo_class = yolo_class
         self._crop_path = crop_path

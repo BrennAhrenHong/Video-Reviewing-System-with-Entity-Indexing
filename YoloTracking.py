@@ -1,25 +1,34 @@
+from typing import Optional
+
 from ultralytics import YOLO
+from PySide6.QtWidgets import QMainWindow
 import os.path
 import cv2
 import time
+from MainWindow import Ui_MainWindow
 
-
-def start_yolo(video_source, model, output_path, imgsz=1280, iou=0.8, conf=0.5, device="CPU"):
+def start_yolo(video_source, model, output_path, imgsz=1280, iou=0.8, conf=0.5, device="CPU", total_frames = 1, ui: Optional[Ui_MainWindow] = None ):
     cap = cv2.VideoCapture(video_source)
 
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    if not type(model) is YOLO:
+        model = YOLO(model)
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     fps = 5.0
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     # Attempt to make folder
     try:
-        os.makedirs(output_path)
+        if (not os.path.exists(output_path)):
+            os.makedirs(output_path)
+        else:
+            return
     except OSError as e:
         print(e)
 
     # create video file
-    output_video_path = os.path.join(output_path, 'annotated_video.avi')
+    output_video_path = os.path.join(output_path, 'annotated_video.mp4')
     out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 
     # output path of inference output folder
@@ -28,6 +37,11 @@ def start_yolo(video_source, model, output_path, imgsz=1280, iou=0.8, conf=0.5, 
     # inferencing time list
     inference_times_list = []
 
+    # progress bar increment value
+    progress_increment_value = 90/total_frames
+    progress_value = 0
+
+    duration = time.time()
     # Loop through the video frames
     while cap.isOpened():
         # Read a frame from the video
@@ -38,21 +52,28 @@ def start_yolo(video_source, model, output_path, imgsz=1280, iou=0.8, conf=0.5, 
             # start time
             start_time = time.time()
 
+            #progress bar update
+            ui.progressBar_status.setValue(progress_value)
+
+
             # run YOLOv8 tracking on the frame, persisting tracks between frames
             results = model.track(frame, persist=True, classes=0, save=True, save_crop=True, save_txt=True, tracker="bytetrack.yaml",
                                   project=project_output_path, name="F", imgsz=imgsz, iou=iou, conf=conf, device=device)
             # end time
             end_time = time.time()
 
+            #progress bar update
+            progress_value += progress_increment_value
+
             # record inference time
             inference_time = end_time - start_time
             inference_times_list.append(inference_time)
 
             # visualize the results on the frame
-            #annotated_frame = results[0].plot()
+            annotated_frame = results[0].plot()
 
             # write
-            #out.write(annotated_frame)
+            out.write(annotated_frame)
 
             # Display the annotated frame
             #cv2.imshow("YOLOv8 Tracking", annotated_frame)
@@ -64,6 +85,8 @@ def start_yolo(video_source, model, output_path, imgsz=1280, iou=0.8, conf=0.5, 
             # break the loop if the end of the video is reached
             break
 
+    duration = time.time() - duration
+
     # release the video capture object and close the display window
     cap.release()
     out.release()
@@ -74,7 +97,7 @@ def start_yolo(video_source, model, output_path, imgsz=1280, iou=0.8, conf=0.5, 
 
     inference_time_filename = os.path.join(output_path, "inference time.txt")
     with open(inference_time_filename, 'w') as file:
-        file.write(str(mean_inference_time))
+        file.write(f"time finished: {str(duration)} \navg time: {str(mean_inference_time)}")
     pass
 
 
@@ -116,7 +139,7 @@ def test_all_model(video_source, def_output):
             print(e)
 
         # create video file
-        output_video_path = os.path.join(output_folder_path, 'annotated_video.avi')
+        output_video_path = os.path.join(output_folder_path, 'annotated_video.mp4')
         out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 
         # output path of inference output folder
@@ -187,7 +210,7 @@ if __name__ == "__main__":
     model_name, model_extension = str.split(model.model_name, sep='.')
 
     # video_source = r"D:\A_Video_Folder\Thesis_Files\HDL_Videos\Cuts\Thesis_Hdlcut_T100_5Mins_5fps.mp4"
-    video_source_path = r"./videos/Thesis_Hdlcut_T100_5Mins_5fps.mp4"
+    video_source_path = r"./input/Thesis_Hdlcut_T100_5Mins_5fps_20secs.mp4"
     #video_source_path = r"./videos/Thesis_FullOfficeCut_T300_5mins.mp4"
     #video_source_path = r"./videos/Thesis_Hdlcut_T100_5Mins_5fps_20secs.mp4"
 

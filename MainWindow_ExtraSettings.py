@@ -7,7 +7,7 @@ def load_extra_ui(self):
     self.pushButton_videoPreview_prev.setEnabled(False)
 
     self.label_status.setText("Idle")
-    #self.progressBar_status.hide()
+    #self.progressBar_status.show()
 
 
     self.pushButton_personCropPreview_auto.setCheckable(True)

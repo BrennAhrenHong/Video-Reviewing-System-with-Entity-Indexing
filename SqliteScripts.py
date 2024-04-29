@@ -24,16 +24,15 @@ class SqliteScripts:
         except Exception as e:
             print(f"An error occurred: {e}")
 
-
-    def load_all_frame_sql(self):
-        script = "SELECT * FROM Frame"
+    def load_all_frame_sql(self, video_title):
+        script = f"SELECT * FROM Frame WHERE video_title = '{video_title}';"
         all_entries = self.fetchall(script)
         frame_list = []
         for detail in all_entries:
-            frame_number, frame_folder_path, frame_folder, frame_image, label_file_path = detail
+            frame_id, frame_number, frame_folder_path, frame_folder, frame_image, label_file_path, video_title = detail
             frame_list.append(Frame(frame_number=frame_number, frame_folder_path=frame_folder_path
                                     , frame_folder=frame_folder, frame_image=frame_image,
-                                    label_file_path=label_file_path))
+                                    label_file_path=label_file_path, video_title=video_title))
 
         return frame_list
 
@@ -44,19 +43,19 @@ class SqliteScripts:
 
         person_list = []
         for detail in all_entries:
-            person_id, has_montage, video_title = detail
+            person_name, person_id, has_montage, video_title = detail
             person_list.append(Person(person_id=person_id, has_montage=has_montage, video_title=video_title))
 
         return person_list
 
 
-    def load_crop_sql(self):
-        script = "SELECT * FROM Crop"
+    def load_crop_sql(self, video_title):
+        script = f"SELECT * FROM Crop WHERE video_title = '{video_title}';"
         all_entries = self.fetchall(script)
 
         crop_list = []
         for detail in all_entries:
-            crop_id, person_id, frame_number, yolo_class, crop_path, label_line, frame_image = detail
+            crop_name, crop_id, person_id, frame_number, yolo_class, crop_path, label_line, frame_image = detail
             crop_list.append(Crop(crop_id=crop_id,
                                   person_id=person_id,
                                   frame_number=frame_number
@@ -68,7 +67,7 @@ class SqliteScripts:
         return crop_list
 
 
-    def get_processed_videos(self):
+    def get_processed_videos(self, ):
         script = "SELECT * FROM VideoDetails"
         all_entries = self.fetchall(script)
 
@@ -79,15 +78,18 @@ class SqliteScripts:
 
         return videodetails_db_list
 
-    def get_person_crops_sql(self, person_id: Optional[int]):
-        script = f"SELECT * FROM Crop WHERE person_id = {person_id};"
+    def get_person_crops_sql(self, person_id: Optional[int], video_title):
+        script = f"SELECT * FROM Crop WHERE person_id = {person_id} AND video_title='{video_title}';"
         all_entries = self.fetchall(script)
 
         crop_list = []
         for detail in all_entries:
-            crop_id, person_id, frame_number, yolo_class, crop_path, label_line, frame_image = detail
+            (crop_name, crop_id, person_id, video_title, frame_number, yolo_class, crop_path, label_line,
+             frame_image) = detail
+
             crop_list.append(Crop(crop_id=crop_id,
                                   person_id=person_id,
+                                  video_title=video_title,
                                   frame_number=frame_number,
                                   yolo_class=yolo_class,
                                   crop_path=crop_path,
@@ -102,10 +104,27 @@ class SqliteScripts:
 
         person_list = []
         for detail in all_entries:
-            person_id, has_montage, video_title = detail
+            person_name, person_id, has_montage, video_title = detail
             person_list.append(Person(person_id=person_id, has_montage=has_montage, video_title=video_title))
 
         return person_list
+
+    def videodetails_is_processed_true(self, video_title):
+        try:
+            conn = sqlite3.connect('main.db')
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE VideoDetails SET (is_processed = True;) WHERE video_title='{video_title}';")
+            conn.close()
+
+            return True
+
+        except sqlite3.Error as e:
+            print(f"Error connecting to database:{e}")
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+
 
 if __name__ == "__main__":
     x = SqliteScripts()
