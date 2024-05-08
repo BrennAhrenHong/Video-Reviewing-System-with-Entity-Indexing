@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="VideoReviewingSystem" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="VideoReviewingSystem" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (Video-Reviewing-System)" project-jdk-type="Python SDK" />
 </project>

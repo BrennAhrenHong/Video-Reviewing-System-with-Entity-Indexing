@@ -124,6 +124,21 @@ class SqliteScripts:
         except Exception as e:
             print(f"An error occurred: {e}")
 
+    def person_has_montage_true(self, video_title, person_id):
+        try:
+            number_id = person_id.split("_")[1]
+            conn = sqlite3.connect('main.db')
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE Person SET has_montage = True WHERE video_title='{video_title}' AND person_id={number_id};")
+            conn.close()
+
+            return True
+
+        except sqlite3.Error as e:
+            print(f"Error connecting to database:{e}")
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":

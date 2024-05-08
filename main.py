@@ -16,6 +16,7 @@ from PySide6.QtGui import QPixmap, QStandardItemModel, QStandardItem
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase, QSqlTableModel
 
 import YoloTracking
+import video_trimming
 from ImageProcessing import Frame, Crop, Person
 from VideoFrameLogic import VideoFrame
 from VideoIndexing import VideoDetails
@@ -75,6 +76,7 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         self._selected_person = None
         self._selected_build_folder_path = None
 
+
         #self.counter_thread = QThread.
 
         # Setup
@@ -109,11 +111,85 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
         self.ui.pushButton_personCropPreview_prev.pressed.connect(self.crop_preview_prev)
         self.ui.pushButton_videoSelection_openFolder.pressed.connect(lambda: self.open_input_folder())
         self.ui.pushButton_videoSelection_add.clicked.connect(self.add_video)
+        self.ui.pushButton_montagePanel_create.clicked.connect(self.create_montage)
+        self.ui.pushButton_controlPanel_openVideoFolder.clicked.connect(lambda: self.open_video_folder())
+        self.ui.pushButton_controlPanel_playVideo.clicked.connect(lambda: self.play_video_folder())
 
         self.show()
 
     def create_montage(self):
-        pass
+        def cut_and_join_video(video_path, start_frame, end_frame, output_filename, fps):
+            # Open video capture object
+            cap = cv2.VideoCapture(video_path)
+
+            # Check if video opened successfully
+            if not cap.isOpened():
+                print("Error opening video!")
+                return
+
+            # Get frame width and height
+            frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+            # Define video codec (e.g., 'XVID') and create VideoWriter object
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            out = cv2.VideoWriter(output_filename, fourcc, fps, (frame_width, frame_height))
+
+            # Skip to the start frame
+            cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+
+            # Process video frames
+            frame_count = start_frame
+            while cap.isOpened() and frame_count <= end_frame:
+                ret, frame = cap.read()
+
+                if ret:
+                    # Write frame to output video
+                    out.write(frame)
+                    frame_count += 1
+                else:
+                    break
+
+            # Release resources
+            cap.release()
+            out.release()
+            print(f"Video '{output_filename}' created successfully!")
+
+        output_montage_path = os.path.join(self.output_folder_path, "montage", self.selected_videodetail.video_title, self.ui.comboBox_detectedPeople_list.currentText())
+        person_build_folder_path = os.path.join(self.output_folder_path, "builds", self.selected_videodetail.video_title, self.ui.comboBox_detectedPeople_list.currentText())
+        input_video = os.path.join(self.input_folder_path, self.selected_videodetail.video_title)
+
+        crop_list = []
+        for crop in os.listdir(person_build_folder_path):
+            crop_list.append(crop)
+
+        crop_ini, extension = crop_list[0].split(".")
+        start_frame = int(crop_ini)
+        end_frame = int(crop_ini)
+
+        for crop in crop_list:
+            frame_number, extension = crop.split(".")
+            if start_frame > int(frame_number):
+                start_frame = int(frame_number)
+
+            if  end_frame < int(frame_number):
+                end_frame = int(frame_number)
+
+        if not os.path.exists("./output/montage"):
+            os.mkdir("./output/montage")
+
+        if not os.path.exists(f"./output/montage/{self.selected_videodetail.video_title}"):
+            os.mkdir(f"./output/montage/{self.selected_videodetail.video_title}")
+
+        if not os.path.exists(output_montage_path):
+            os.mkdir(output_montage_path)
+
+        self.ui.comboBox_detectedPeople_list.currentText()
+        output_filename = os.path.join(output_montage_path, "montage.mp4")
+        cut_and_join_video(video_path=input_video, start_frame=start_frame, end_frame=end_frame, output_filename=output_filename, fps=5)
+        sql = SqliteScripts()
+        sql.person_has_montage_true(video_title=self.selected_videodetail.video_title, person_id=self.ui.comboBox_detectedPeople_list.currentText())
+        self.get_summary_details()
 
     def open_input_folder(self):
         os.startfile(os.path.join(os.getcwd(), "input"))
@@ -142,6 +218,20 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
 
         self.ui.comboBox_presetSelection_box.addItems(preset_tuple)
         pass
+
+    def open_video_folder(self):
+        video_title = self.selected_videodetail.video_title
+        person_id = self.ui.comboBox_detectedPeople_list.currentText()
+        montage_folder = f"./output/montage/{video_title}/{person_id}"
+        person_folder = os.path.join(os.getcwd(), montage_folder)
+        os.startfile(person_folder)
+
+    def play_video_folder(self):
+        video_title = self.selected_videodetail.video_title
+        person_id = self.ui.comboBox_detectedPeople_list.currentText()
+        montage_folder = f"./output/montage/{video_title}/{person_id}/montage.mp4"
+        person_folder = os.path.join(os.getcwd(), montage_folder)
+        os.startfile(person_folder)
 
     def process(self):
         def start_yolo():
