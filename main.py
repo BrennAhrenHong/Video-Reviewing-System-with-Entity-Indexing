@@ -21,6 +21,7 @@ from ImageProcessing import Frame, Crop, Person
 from VideoFrameLogic import VideoFrame
 from VideoIndexing import VideoDetails
 from SqliteScripts import SqliteScripts
+import timestamps
 
 #from AsyncioPySide6 import AsyncioPySide6
 
@@ -119,6 +120,17 @@ class SummaryLogic(QMainWindow, Ui_MainWindow):
 
     def create_montage(self):
         def cut_and_join_video(video_path, start_frame, end_frame, output_filename, fps):
+            # Create timestamps
+            start_timestamp = timestamps.get_frame_timestamp(video_path=video_path, frame_number=start_frame, fps=5)
+            end_timestamp = timestamps.get_frame_timestamp(video_path=video_path, frame_number=end_frame, fps=5)
+
+            text_to_write = f"Timestamp 1: {start_timestamp}\nTimestamp 2: {end_timestamp}"
+
+            # Open the file in write mode ("w") with a descriptive filename
+            with open(f"./timestamps/{str(self.selected_person)}.txt", "w") as notepad_file:
+                # Write the text to the file
+                notepad_file.write(text_to_write)
+
             # Open video capture object
             cap = cv2.VideoCapture(video_path)
 
